@@ -28,22 +28,14 @@ namespace PromotionEngineLibrary
 
         public decimal CalculatePrice(Cart cart)
         {
-            decimal output = 0M;
-
-            output = CalculatePrice(cart, CalculatePromotions);
-
-            if (output != -1)
-            {
-                return output;
-            }
-
-            return cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * item.Quantity);
+            return CalculatePriceAux(cart);
         }
 
-        internal decimal CalculatePrice(Cart cart, Func<List<IProduct>, int, decimal> calculatePromotions)
+        internal decimal CalculatePriceAux(Cart cart)
         {
             decimal output = -1;
             decimal promotionValue = 0;
+            int missingItems;
             List<ItemCart> processedItems = new List<ItemCart>();
             processedItems.AddRange(cart.Contents);
 
@@ -51,28 +43,32 @@ namespace PromotionEngineLibrary
             foreach(var item in cart.Contents)
             {
                 List<IProduct> productsInCart = new List<IProduct>();
-                promotionValue = calculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity);
-                if (promotionValue != -1)
+                promotionValue = CalculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
+                if (missingItems == 0)
                 {
                     return promotionValue;
-                    //processedItems.Remove(item);
                 }
+
+                return cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems);
             }
 
             return output;
         }
 
-        private decimal CalculatePromotions(List<IProduct> products, int quantity)
+        private decimal CalculatePromotions(List<IProduct> products, int quantity, out int missingItems)
         {
+            missingItems = quantity;
+
             foreach(var promotion in currentPromotions)
             {
                 if (promotion.InvolvedProducts.Except(products).Count() == 0 && quantity >= promotion.NumberOfProducts)
                 {
-                    return promotion.Cost;
+                    missingItems = quantity - promotion.NumberOfProducts;
+                    return promotion.Cost + CalculatePromotions(products, missingItems, out quantity);
                 }
             }
 
-            return -1;
+            return 0;
         }
     }
 }
