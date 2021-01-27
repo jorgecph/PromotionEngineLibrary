@@ -20,5 +20,17 @@ namespace PromotionEngineLibrary
             Sku = sku;
             Price = price;
         }
+
+        public override bool Equals(object obj)
+        {
+            Product other = obj as Product;
+
+            if (other != null)
+            {
+                return Equals(other.Sku, Sku);
+            }
+
+            return false;
+        }
     }
 }
