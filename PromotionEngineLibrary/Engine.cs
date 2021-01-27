@@ -14,5 +14,10 @@ namespace PromotionEngineLibrary
 
             return cart.Contents.Sum(p => p.Product.Price * p.Quantity);
         }
+
+        public void AddPromotions()
+        {
+
+        }
     }
 }
