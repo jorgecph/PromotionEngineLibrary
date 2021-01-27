@@ -14,7 +14,7 @@ namespace PromotionEngineLibrary
             Quantity = quentity;
         }
 
-        IProduct Product;
-        int Quantity;
+        public IProduct Product;
+        public int Quantity;
     }
 }

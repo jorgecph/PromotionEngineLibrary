@@ -12,8 +12,7 @@ namespace PromotionEngineLibrary
         {
             decimal output = 0M;
 
-            //foreach(var product in cart.Products)
-            return output;
+            return cart.Contents.Sum(p => p.Product.Price * p.Quantity);
         }
     }
 }
