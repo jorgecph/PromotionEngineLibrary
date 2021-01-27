@@ -8,8 +8,11 @@ namespace PromotionEngineLibrary
 {
     public class Cart
     {
+        List<ItemCart> items = new List<ItemCart>();
+
         public void AddProduct(Product product, int quantity)
         {
+            items.Add(new ItemCart(product, quantity));
         }
     }
 }

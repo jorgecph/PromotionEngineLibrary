@@ -10,6 +10,9 @@ namespace PromotionEngineLibrary
     {
         public static decimal CalculatePrice(Cart cart)
         {
+            decimal output = 0M;
+
+            //foreach(var product in cart.Products)
             return 0M;
         }
     }

@@ -2,7 +2,7 @@
 
 namespace PromotionEngineLibrary
 {
-    public class Product
+    public class Product : IProduct
     {
         public string Sku { get; init; }
         public string Description { get; set; }
