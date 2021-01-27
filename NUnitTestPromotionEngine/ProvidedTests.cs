@@ -49,8 +49,9 @@ namespace NUnitTestPromotionEngine
         public void TestScenarioB()
         {
             cart.AddItem("A", 5);
-            //cart.AddItem("B", 5);
-            Assert.AreEqual(engine.CalculatePrice(cart), 230);
+            cart.AddItem("B", 5);
+            cart.AddItem("C", 1);
+            Assert.AreEqual(engine.CalculatePrice(cart), 370);
         }
 
         [Test]

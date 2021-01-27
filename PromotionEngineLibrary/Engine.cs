@@ -33,7 +33,7 @@ namespace PromotionEngineLibrary
 
         internal decimal CalculatePriceAux(Cart cart)
         {
-            decimal output = -1;
+            decimal output = 0M;
             decimal promotionValue = 0;
             int missingItems;
             List<ItemCart> processedItems = new List<ItemCart>();
@@ -45,7 +45,7 @@ namespace PromotionEngineLibrary
                 List<IProduct> productsInCart = new List<IProduct>();
                 promotionValue = CalculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
 
-                output = promotionValue + cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems);
+                output += promotionValue + products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
             }
 
             return output;
