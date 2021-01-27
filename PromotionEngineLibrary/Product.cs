@@ -4,5 +4,15 @@ namespace PromotionEngineLibrary
 {
     public class Product
     {
+        public string Sku { get; init; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+
+        public Product(string sku, string description, decimal price)
+        {
+            Sku = sku;
+            Description = description;
+            Price = price;
+        }
     }
 }
