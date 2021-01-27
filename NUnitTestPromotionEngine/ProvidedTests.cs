@@ -73,6 +73,26 @@ namespace NUnitTestPromotionEngine
         }
 
         [Test]
+        public void TestScenarioC2()
+        {
+            cart.AddItem("A", 3);
+            cart.AddItem("B", 5);
+            cart.AddItem("C", 2);
+            cart.AddItem("D", 1);
+            Assert.AreEqual(engine.CalculatePrice(cart), 300);
+        }
+
+        [Test]
+        public void TestScenarioC3()
+        {
+            cart.AddItem("A", 3);
+            cart.AddItem("B", 5);
+            cart.AddItem("C", 2);
+            cart.AddItem("D", 2);
+            Assert.AreEqual(engine.CalculatePrice(cart), 310);
+        }
+
+        [Test]
         public void TestSimplePromotions()
         {
             engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { new Product("A", 50) } });
@@ -80,5 +100,6 @@ namespace NUnitTestPromotionEngine
 
             Assert.AreEqual(engine.CalculatePrice(cart), 130);
         }
+
     }
 }
