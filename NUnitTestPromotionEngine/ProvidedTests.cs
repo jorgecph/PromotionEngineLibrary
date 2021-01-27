@@ -14,16 +14,19 @@ namespace NUnitTestPromotionEngine
         {
             cart = new Cart();
             engine = new Engine();
-            engine.AddProduct(new Product("A", 50));
-            engine.AddProduct(new Product("B", 30));
 
+            var productA = new Product("A", 50);
+            var productB = new Product("B", 30);
             var productC = new Product("C", 20);
             var productD = new Product("D", 15);
+
+            engine.AddProduct(productA);
+            engine.AddProduct(productB);
             engine.AddProduct(productC);
             engine.AddProduct(productD);
 
-            engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { new Product("A", 50) } });
-            engine.AddPromotion(new Promotion() { Cost = 45M, NumberOfProducts = 2, InvolvedProducts = new List<IProduct>() { new Product("B", 50) } });
+            engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { productA } });
+            engine.AddPromotion(new Promotion() { Cost = 45M, NumberOfProducts = 2, InvolvedProducts = new List<IProduct>() { productB } });
             
             List<IProduct> productCplusD = new List<IProduct>();
             productCplusD.Add(productC);
