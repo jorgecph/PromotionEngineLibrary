@@ -26,7 +26,6 @@ namespace PromotionEngineLibrary
             return currentPromotions.Remove(promotion);
         }
 
-
         public decimal CalculatePrice(Cart cart)
         {
             decimal output = 0M;
@@ -54,7 +53,7 @@ namespace PromotionEngineLibrary
 
             foreach(var promotion in currentPromotions)
             {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.NumberOfProducts != 0)
+                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.InvolvedProducts.Count() == 1)
                 {
                     while (missingItems >= promotion.NumberOfProducts)
                     {
