@@ -12,7 +12,7 @@ namespace PromotionEngineLibrary
             _promotions = promotions;
         }
 
-        public decimal ApplyPromotion(ref Cart cart)
+        public decimal ApplyPromotionInvolvingSeveralProducts(ref Cart cart)
         {
             List<ItemCart> involvedItems = new List<ItemCart>();
             decimal output = 0;
@@ -24,6 +24,7 @@ namespace PromotionEngineLibrary
                     foreach(var involvedProduct in promotion.InvolvedProducts)
                     {
                         ItemCart foundItem = cart.Contents.Find(i => Equals(i.Sku, involvedProduct.Sku));
+
                         if (foundItem.Quantity > 0)
                         {
                             involvedItems.Add(foundItem);
