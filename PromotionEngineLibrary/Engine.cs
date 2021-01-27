@@ -35,7 +35,7 @@ namespace PromotionEngineLibrary
             processedItems.AddRange(cart.Contents);
             PromotionEngine promotionEngine = new PromotionEngine(currentPromotions);
 
-            //promotionEngine.ApplyPromotion(currentPromotions, cart.Contents);
+            output += promotionEngine.ApplyPromotion(cart.Contents);
 
             // Simple case, promotion involves one product
             foreach (var item in cart.Contents)
