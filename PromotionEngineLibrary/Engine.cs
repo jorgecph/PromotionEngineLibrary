@@ -25,15 +25,20 @@ namespace PromotionEngineLibrary
         public decimal CalculatePrice(Cart cart)
         {
             decimal output = 0M;
-            decimal promotionValue = 0;
-            int missingItems;
-            List<ItemCart> processedItems = new List<ItemCart>();
-            processedItems.AddRange(cart.Contents);
             PromotionEngine promotionEngine = new PromotionEngine(currentPromotions);
 
             output += cart.Contents.Count > 1 ? promotionEngine.ApplyPromotionInvolvingSeveralProducts(ref cart) : 0M;
+            output += CalculateSingleProductPromotions(cart, promotionEngine);
 
-            // Simple case, promotion involves one product
+            return output;
+        }
+
+        private decimal CalculateSingleProductPromotions(Cart cart, PromotionEngine promotionEngine)
+        {
+            decimal output = 0M;
+            decimal promotionValue = 0;
+            int missingItems;
+
             foreach (var item in cart.Contents)
             {
                 if (item.Quantity == 0)
@@ -41,7 +46,6 @@ namespace PromotionEngineLibrary
                     continue;
                 }
 
-                List<IProduct> productsInCart = new List<IProduct>();
                 promotionValue = promotionEngine.CalculateSimplePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
 
                 output += promotionValue + products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
