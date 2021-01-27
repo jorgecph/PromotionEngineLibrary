@@ -49,7 +49,7 @@ namespace PromotionEngineLibrary
                     return promotionValue;
                 }
 
-                return cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems);
+                return promotionValue + cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems);
             }
 
             return output;
