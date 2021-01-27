@@ -41,6 +41,12 @@ namespace PromotionEngineLibrary
                             output += promotion.Cost;
                         }
                     }
+
+                    foreach (var newItem in involvedItems)
+                    {
+                        cart.Contents.Remove(cart.Contents.Find(i => Equals(i.Sku, newItem.Sku)));
+                        cart.Contents.Add(newItem);
+                    }
                 }
             }
 
@@ -81,7 +87,6 @@ namespace PromotionEngineLibrary
 
             return output;
         }
-
 
         public decimal CalculateSimplePromotions(List<IProduct> products, int quantity, out int missingItems)
         {
