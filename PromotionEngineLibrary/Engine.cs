@@ -60,7 +60,7 @@ namespace PromotionEngineLibrary
                 if (promotion.InvolvedProducts.Except(products).Count() == 0 && quantity >= promotion.NumberOfProducts)
                 {
                     missingItems = quantity - promotion.NumberOfProducts;
-                    return promotion.Cost + CalculatePromotions(products, missingItems, out quantity);
+                    return promotion.Cost + CalculatePromotions(products, missingItems, out missingItems);
                 }
             }
 
