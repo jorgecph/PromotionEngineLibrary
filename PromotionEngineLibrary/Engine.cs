@@ -53,18 +53,22 @@ namespace PromotionEngineLibrary
 
         private decimal CalculatePromotions(List<IProduct> products, int quantity, out int missingItems)
         {
+            decimal output = 0;
             missingItems = quantity;
 
             foreach(var promotion in currentPromotions)
             {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0 && quantity >= promotion.NumberOfProducts)
+                if (promotion.InvolvedProducts.Except(products).Count() == 0)
                 {
-                    missingItems = quantity - promotion.NumberOfProducts;
-                    return promotion.Cost + CalculatePromotions(products, missingItems, out missingItems);
+                    while (missingItems >= promotion.NumberOfProducts)
+                    {
+                        missingItems = quantity - promotion.NumberOfProducts;
+                        output += promotion.Cost + CalculatePromotions(products, missingItems, out missingItems);
+                    }
                 }
             }
 
-            return 0;
+            return output;
         }
     }
 }
