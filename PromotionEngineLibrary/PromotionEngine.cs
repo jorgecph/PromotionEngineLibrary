@@ -37,14 +37,26 @@ namespace PromotionEngineLibrary
                     {
                         while(CountMinItems(involvedItems) > 0)
                         {
-                            involvedItems.ForEach(delegate (ItemCart cart) { cart.Quantity--; });
+                            involvedItems = DecrementQuantity(involvedItems);
                             output += promotion.Cost;
                         }
                     }
                 }
             }
 
-            return 0M;
+            return output;
+        }
+
+        private static List<ItemCart> DecrementQuantity(List<ItemCart> items)
+        {
+            var output = new List<ItemCart>();
+
+            foreach(var item in items)
+            {
+                output.Add(new ItemCart { Sku = item.Sku, Quantity = item.Quantity - 1 });
+            }
+
+            return output;
         }
 
         private static int CountMinItems(IList<ItemCart> items)

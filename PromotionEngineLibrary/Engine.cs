@@ -35,11 +35,16 @@ namespace PromotionEngineLibrary
             processedItems.AddRange(cart.Contents);
             PromotionEngine promotionEngine = new PromotionEngine(currentPromotions);
 
-            output += promotionEngine.ApplyPromotion(cart.Contents);
+            output += cart.Contents.Count > 1 ? promotionEngine.ApplyPromotion(cart.Contents) : 0M;
 
             // Simple case, promotion involves one product
             foreach (var item in cart.Contents)
             {
+                if (item.Quantity == 0)
+                {
+                    continue;
+                }
+
                 List<IProduct> productsInCart = new List<IProduct>();
                 promotionValue = promotionEngine.CalculateSimplePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
 
