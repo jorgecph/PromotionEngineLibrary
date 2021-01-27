@@ -8,12 +8,22 @@ namespace PromotionEngineLibrary
 {
     public class Engine
     {
-        public List<IPromotion> CurrentPromotions { set; get; } = new List<IPromotion>();
+        private List<IPromotion> currentPromotions = new List<IPromotion>();
         private List<IProduct> products = new List<IProduct>();
 
         public void AddProduct(IProduct product)
         {
             products.Add(product);
+        }
+
+        public void AddPromotion(IPromotion promotion)
+        {
+            currentPromotions.Add(promotion);
+        }
+
+        public bool RemovePromotion(IPromotion promotion)
+        {
+            return currentPromotions.Remove(promotion);
         }
 
         public decimal CalculatePrice(Cart cart)
@@ -54,9 +64,9 @@ namespace PromotionEngineLibrary
 
         private decimal CalculatePromotions(List<IProduct> products, int quantity)
         {
-            foreach(var promotion in CurrentPromotions)
+            foreach(var promotion in currentPromotions)
             {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.NumberOfProducts >= quantity)
+                if (promotion.InvolvedProducts.Except(products).Count() == 0 && quantity >= promotion.NumberOfProducts)
                 {
                     return promotion.Cost;
                 }

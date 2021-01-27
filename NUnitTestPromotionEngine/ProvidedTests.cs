@@ -9,11 +9,10 @@ namespace NUnitTestPromotionEngine
         private Engine engine;
         private Cart cart;
 
-        [SetUp]
-        public void Setup()
+        [OneTimeSetUp]
+        public void Init()
         {
             cart = new Cart();
-
             engine = new Engine();
             engine.AddProduct(new Product("A", 50));
             engine.AddProduct(new Product("B", 30));
@@ -21,9 +20,15 @@ namespace NUnitTestPromotionEngine
             engine.AddProduct(new Product("D", 15));
         }
 
+        [SetUp]
+        public void Setup()
+        {
+        }
+
         [Test]
         public void TestScenarioA()
         {
+            cart.ClearItems();
             cart.AddItem("A", 1);
             Assert.AreEqual(engine.CalculatePrice(cart), 50);
 
@@ -39,7 +44,7 @@ namespace NUnitTestPromotionEngine
         [Test]
         public void TestPromotion_3_A_for_150()
         {
-            engine.CurrentPromotions.Add(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { new Product("A", 50) } });
+            engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { new Product("A", 50) } });
             cart.AddItem("A", 3);
 
             Assert.AreEqual(engine.CalculatePrice(cart), 130);
