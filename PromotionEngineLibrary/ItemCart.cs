@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PromotionEngineLibrary
 {
-    internal struct ItemCart
+    public struct ItemCart
     {
         public ItemCart(IProduct product, int quentity)
         {

@@ -13,7 +13,7 @@ namespace PromotionEngineLibrary
             decimal output = 0M;
 
             //foreach(var product in cart.Products)
-            return 0M;
+            return output;
         }
     }
 }
