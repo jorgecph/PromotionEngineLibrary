@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using PromotionEngineLibrary;
 using System.Collections.Generic;
 
 namespace NUnitTestPromotionEngine
@@ -13,11 +14,8 @@ namespace NUnitTestPromotionEngine
         [Test]
         public void TestPromotion_3_A_for_150()
         {
-            List<Product, int> products = new List<Product>();
-
-            Promotion current = new Promotion(product, 3, 130);
-
-            Cart cart = new Cart(products);
+            Cart cart = new Cart();
+            cart.AddProduct(new Product(), 3);
 
             Assert.Equals(Engine.CalculatePrice(cart), 130M);
         }
