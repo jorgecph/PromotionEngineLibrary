@@ -14,10 +14,13 @@ namespace NUnitTestPromotionEngine
         [Test]
         public void TestPromotion_3_A_for_150()
         {
+            Engine engine = new Engine();
             Cart cart = new Cart();
-            cart.AddProduct(new Product("A", string.Empty, 50), 3);
 
-            Assert.Equals(Engine.CalculatePrice(cart), 130M);
+            engine.CurrentPromotions.Add(new Promotion() { Cost = 130M, InvolvedProducts = new List<IProduct>() { new Product("A", 50) } });
+            cart.AddProduct(new Product("A", 50), 3);
+
+            Assert.Equals(engine.CalculatePrice(cart), 130M);
         }
     }
 }

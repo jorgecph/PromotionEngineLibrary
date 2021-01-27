@@ -10,7 +10,7 @@ namespace PromotionEngineLibrary
     {
         public List<IPromotion> CurrentPromotions { set; get; } = new List<IPromotion>();
 
-        public static decimal CalculatePrice(Cart cart)
+        public decimal CalculatePrice(Cart cart)
         {
             decimal output = 0M;
 

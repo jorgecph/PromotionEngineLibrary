@@ -14,5 +14,11 @@ namespace PromotionEngineLibrary
             Description = description;
             Price = price;
         }
+
+        public Product(string sku, decimal price)
+        {
+            Sku = sku;
+            Price = price;
+        }
     }
 }
