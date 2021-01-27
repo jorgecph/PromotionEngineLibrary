@@ -6,15 +6,15 @@ namespace NUnitTestPromotionEngine
 {
     public class Tests
     {
-        private Engine engine = new Engine();
-        private Cart cart = new Cart();
+        private Engine engine;
+        private Cart cart;
 
         [SetUp]
         public void Setup()
         {
-            Cart cart = new Cart();
+            cart = new Cart();
 
-            Engine engine = new Engine();
+            engine = new Engine();
             engine.AddProduct(new Product("A", 50));
             engine.AddProduct(new Product("B", 30));
             engine.AddProduct(new Product("C", 20));

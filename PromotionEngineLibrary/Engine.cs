@@ -40,6 +40,7 @@ namespace PromotionEngineLibrary
             // Simple case, promotion involves one product
             foreach(var item in cart.Contents)
             {
+                List<IProduct> productsInCart = new List<IProduct>();
                 promotionValue = calculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity);
                 if (promotionValue != -1)
                 {
@@ -55,7 +56,7 @@ namespace PromotionEngineLibrary
         {
             foreach(var promotion in CurrentPromotions)
             {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0)
+                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.NumberOfProducts >= quantity)
                 {
                     return promotion.Cost;
                 }
