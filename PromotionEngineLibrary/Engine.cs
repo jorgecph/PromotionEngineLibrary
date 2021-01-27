@@ -44,12 +44,8 @@ namespace PromotionEngineLibrary
             {
                 List<IProduct> productsInCart = new List<IProduct>();
                 promotionValue = CalculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
-                if (missingItems == 0)
-                {
-                    return promotionValue;
-                }
 
-                return promotionValue + cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems);
+                output = promotionValue + cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems);
             }
 
             return output;
