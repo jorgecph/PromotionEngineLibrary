@@ -1,18 +1,12 @@
-using NUnit.Framework;
-using PromotionEngineLibrary;
+﻿using PromotionEngineLibrary;
+using System;
 using System.Collections.Generic;
 
-namespace NUnitTestPromotionEngine
+namespace PromotionEngineApp
 {
-    public class Tests
+    class Program
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-        [Test]
-        public void TestPromotion_3_A_for_150()
+        static void Main(string[] args)
         {
             Engine engine = new Engine();
             Cart cart = new Cart();
@@ -20,7 +14,8 @@ namespace NUnitTestPromotionEngine
             engine.CurrentPromotions.Add(new Promotion() { Cost = 130M, InvolvedProducts = new List<IProduct>() { new Product("A", 50) } });
             cart.AddProduct(new Product("A", 50), 3);
 
-            Assert.AreEqual(engine.CalculatePrice(cart), 130);
+            Console.WriteLine($"{engine.CalculatePrice(cart)}");
+            Console.WriteLine(  );
         }
     }
 }

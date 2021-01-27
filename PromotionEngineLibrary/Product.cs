@@ -2,7 +2,7 @@
 
 namespace PromotionEngineLibrary
 {
-    public class Product : IProduct
+    public class Product : IProduct, IEquatable<Product>
     {
         public string Sku { get; init; }
         public string Description { get; set; }
@@ -21,16 +21,17 @@ namespace PromotionEngineLibrary
             Price = price;
         }
 
-        public override bool Equals(object obj)
-        {
-            Product other = obj as Product;
+        public override bool Equals(object obj) => Equals(obj as Product);
+        public override int GetHashCode() => Sku.GetHashCode();
 
-            if (other != null)
+        public bool Equals(Product other)
+        {
+            if (other == null)
             {
-                return Equals(other.Sku, Sku);
+                return false;
             }
 
-            return false;
+            return Equals(other.Sku, Sku);
         }
     }
 }
