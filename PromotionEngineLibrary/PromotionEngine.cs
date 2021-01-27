@@ -42,15 +42,20 @@ namespace PromotionEngineLibrary
                         }
                     }
 
-                    foreach (var newItem in involvedItems)
-                    {
-                        cart.Contents.Remove(cart.Contents.Find(i => Equals(i.Sku, newItem.Sku)));
-                        cart.Contents.Add(newItem);
-                    }
+                    ReplaceItems(ref cart, involvedItems);
                 }
             }
 
             return output;
+        }
+
+        private static void ReplaceItems(ref Cart cart, List<ItemCart> newItems)
+        {
+            foreach (var newItem in newItems)
+            {
+                cart.Contents.Remove(cart.Contents.Find(i => Equals(i.Sku, newItem.Sku)));
+                cart.Contents.Add(newItem);
+            }
         }
 
         private static List<ItemCart> DecrementQuantity(List<ItemCart> items)
