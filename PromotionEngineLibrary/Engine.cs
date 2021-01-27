@@ -33,34 +33,17 @@ namespace PromotionEngineLibrary
             int missingItems;
             List<ItemCart> processedItems = new List<ItemCart>();
             processedItems.AddRange(cart.Contents);
+            PromotionEngine promotionEngine = new PromotionEngine(currentPromotions);
+
+            //promotionEngine.ApplyPromotion(currentPromotions, cart.Contents);
 
             // Simple case, promotion involves one product
             foreach (var item in cart.Contents)
             {
                 List<IProduct> productsInCart = new List<IProduct>();
-                promotionValue = CalculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
+                promotionValue = promotionEngine.CalculateSimplePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
 
                 output += promotionValue + products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
-            }
-
-            return output;
-        }
-
-        private decimal CalculatePromotions(List<IProduct> products, int quantity, out int missingItems)
-        {
-            decimal output = 0;
-            missingItems = quantity;
-
-            foreach(var promotion in currentPromotions)
-            {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.InvolvedProducts.Count() == 1)
-                {
-                    while (missingItems >= promotion.NumberOfProducts)
-                    {
-                        missingItems -= promotion.NumberOfProducts;
-                        output += promotion.Cost;
-                    }
-                }
             }
 
             return output;
