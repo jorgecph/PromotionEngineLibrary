@@ -9,6 +9,12 @@ namespace PromotionEngineLibrary
     public class Engine
     {
         public List<IPromotion> CurrentPromotions { set; get; } = new List<IPromotion>();
+        private List<IProduct> products = new List<IProduct>();
+
+        public void AddProduct(IProduct product)
+        {
+            products.Add(product);
+        }
 
         public decimal CalculatePrice(Cart cart)
         {
@@ -21,12 +27,12 @@ namespace PromotionEngineLibrary
                 return output;
             }
 
-            return cart.Contents.Sum(p => p.Product.Price * p.Quantity);
+            return cart.Contents.Sum(item => products.Find(product => Equals(product.Sku, item.Sku)).Price * item.Quantity);
         }
 
-        internal decimal CalculatePrice(Cart cart, Func<List<IProduct>, decimal> calculatePromotions)
+        internal decimal CalculatePrice(Cart cart, Func<List<IProduct>, int, decimal> calculatePromotions)
         {
-            decimal output = 0M;
+            decimal output = -1;
             decimal promotionValue = 0;
             List<ItemCart> processedItems = new List<ItemCart>();
             processedItems.AddRange(cart.Contents);
@@ -34,18 +40,18 @@ namespace PromotionEngineLibrary
             // Simple case, promotion involves one product
             foreach(var item in cart.Contents)
             {
-                promotionValue = calculatePromotions(new List<IProduct> { item.Product });
+                promotionValue = calculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity);
                 if (promotionValue != -1)
                 {
-                    output += promotionValue;
-                    processedItems.Remove(item);
+                    return promotionValue;
+                    //processedItems.Remove(item);
                 }
             }
 
             return output;
         }
 
-        private decimal CalculatePromotions(List<IProduct> products)
+        private decimal CalculatePromotions(List<IProduct> products, int quantity)
         {
             foreach(var promotion in CurrentPromotions)
             {

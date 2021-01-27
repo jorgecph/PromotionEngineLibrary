@@ -10,9 +10,14 @@ namespace PromotionEngineLibrary
     {
         public List<ItemCart> Contents { get; private set; } = new List<ItemCart>();
 
-        public void AddProduct(Product product, int quantity)
+        public void AddItem(string sku, int quantity)
         {
-            Contents.Add(new ItemCart(product, quantity));
+            Contents.Add(new ItemCart(sku, quantity));
+        }
+
+        public void ClearItems()
+        {
+            Contents.Clear();
         }
     }
 }

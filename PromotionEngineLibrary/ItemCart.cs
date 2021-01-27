@@ -8,13 +8,13 @@ namespace PromotionEngineLibrary
 {
     public struct ItemCart
     {
-        public ItemCart(Product product, int quentity)
+        public ItemCart(string sku, int quentity)
         {
-            Product = product;
+            Sku = sku;
             Quantity = quentity;
         }
 
-        public Product Product;
+        public string Sku;
         public int Quantity;
     }
 }
