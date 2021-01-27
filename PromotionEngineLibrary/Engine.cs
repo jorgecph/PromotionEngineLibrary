@@ -26,12 +26,8 @@ namespace PromotionEngineLibrary
             return currentPromotions.Remove(promotion);
         }
 
-        public decimal CalculatePrice(Cart cart)
-        {
-            return CalculatePriceAux(cart);
-        }
 
-        internal decimal CalculatePriceAux(Cart cart)
+        public decimal CalculatePrice(Cart cart)
         {
             decimal output = 0M;
             decimal promotionValue = 0;
@@ -40,7 +36,7 @@ namespace PromotionEngineLibrary
             processedItems.AddRange(cart.Contents);
 
             // Simple case, promotion involves one product
-            foreach(var item in cart.Contents)
+            foreach (var item in cart.Contents)
             {
                 List<IProduct> productsInCart = new List<IProduct>();
                 promotionValue = CalculatePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
@@ -58,12 +54,12 @@ namespace PromotionEngineLibrary
 
             foreach(var promotion in currentPromotions)
             {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0)
+                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.NumberOfProducts != 0)
                 {
                     while (missingItems >= promotion.NumberOfProducts)
                     {
-                        missingItems = quantity - promotion.NumberOfProducts;
-                        output += promotion.Cost + CalculatePromotions(products, missingItems, out missingItems);
+                        missingItems -= promotion.NumberOfProducts;
+                        output += promotion.Cost;
                     }
                 }
             }
