@@ -35,7 +35,7 @@ namespace PromotionEngineLibrary
 
                     if (promotion.InvolvedProducts.Count == involvedItems.Count)
                     {
-                        while(CountMinItems(involvedItems) > 0)
+                        while(!involvedItems.Exists(i => i.Quantity == 0))
                         {
                             involvedItems = DecrementQuantity(involvedItems);
                             output += promotion.Cost;
@@ -60,29 +60,6 @@ namespace PromotionEngineLibrary
             foreach(var item in items)
             {
                 output.Add(new ItemCart { Sku = item.Sku, Quantity = item.Quantity - 1 });
-            }
-
-            return output;
-        }
-
-        private static int CountMinItems(IList<ItemCart> items)
-        {
-            int output = -1;
-
-            foreach(var item in items)
-            {
-                if (item.Quantity == 0)
-                {
-                    return 0;
-                }
-                else if (output == -1)
-                {
-                    output = item.Quantity;
-                }
-                else if (output < item.Quantity)
-                {
-                    output = item.Quantity;
-                }
             }
 
             return output;
