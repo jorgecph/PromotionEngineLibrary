@@ -6,10 +6,12 @@ namespace PromotionEngineLibrary
     internal class PromotionEngine
     {
         private List<IPromotion> promotions;
+        private List<IProduct> products;
 
-        public PromotionEngine(List<IPromotion> incomingPromotions)
+        public PromotionEngine(List<IPromotion> existingPromotions, List<IProduct> existingproducts)
         {
-            promotions = incomingPromotions;
+            promotions = existingPromotions;
+            products = existingproducts;
         }
 
         private decimal CalculateSimplePromotions(List<IProduct> products, int quantity, out int missingItems)
@@ -32,7 +34,7 @@ namespace PromotionEngineLibrary
             return output;
         }
 
-        private decimal ApplyMultipleProductPromotions(Cart cart)
+        private decimal ApplyMultipleProductPromotions(List<ItemCart> items)
         {
             List<ItemCart> involvedItems = new List<ItemCart>();
             decimal output = 0;
@@ -43,7 +45,7 @@ namespace PromotionEngineLibrary
                 {
                     promotion.InvolvedProducts.ForEach(delegate (IProduct involvedProduct)
                     {
-                        ItemCart foundItem = cart.Contents.Find(i => Equals(i.Sku, involvedProduct.Sku));
+                        ItemCart foundItem = items.Find(i => Equals(i.Sku, involvedProduct.Sku));
 
                         if (foundItem.Quantity > 0)
                         {
@@ -60,17 +62,16 @@ namespace PromotionEngineLibrary
                         }
                     }
 
-                    Utilities.ReplaceItems(cart.Contents, involvedItems);
+                    Utilities.ReplaceItems(items, involvedItems);
                 }
             });
 
             return output;
         }
 
-        private decimal ApplySingleProductPromotions(List<ItemCart> items, List<IProduct> products)
+        private decimal ApplySingleProductPromotions(List<ItemCart> items)
         {
             decimal output = 0M;
-            decimal promotionValue = 0;
             int missingItems;
 
             foreach (var item in items)
@@ -80,18 +81,18 @@ namespace PromotionEngineLibrary
                     continue;
                 }
 
-                promotionValue = CalculateSimplePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems);
-                output += promotionValue + products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
+                output += CalculateSimplePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems) +
+                    products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
             }
 
             return output;
         }
 
-        public decimal GetPriceBasedOnPromotions(Cart cart, List<IProduct> products)
+        public decimal GetPriceBasedOnPromotions(List<ItemCart> items)
         {
             decimal output = 0M;
-            output += cart.Contents.Count > 1 ? ApplyMultipleProductPromotions(cart) : 0M;
-            output += ApplySingleProductPromotions(cart.Contents, products);
+            output += items.Count > 1 ? ApplyMultipleProductPromotions(items) : 0M;
+            output += ApplySingleProductPromotions(items);
             return output;
         }
     }
