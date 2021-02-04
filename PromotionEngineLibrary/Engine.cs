@@ -4,8 +4,8 @@ namespace PromotionEngineLibrary
 {
     public class Engine
     {
-        private List<IPromotion> promotions = new List<IPromotion>();
-        private List<IProduct> products = new List<IProduct>();
+        private readonly List<IPromotion> promotions = new List<IPromotion>();
+        private readonly List<IProduct> products = new List<IProduct>();
 
         public void AddProduct(IProduct product)
         {

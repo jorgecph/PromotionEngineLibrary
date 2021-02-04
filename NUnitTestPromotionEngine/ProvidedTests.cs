@@ -19,18 +19,28 @@ namespace NUnitTestPromotionEngine
             var productB = new Product("B", 30);
             var productC = new Product("C", 20);
             var productD = new Product("D", 15);
+            var productE = new Product("E", 62);
+            var productF = new Product("F", 55);
+
+            List<IProduct> productCplusD = new List<IProduct>();
+            productCplusD.Add(productC);
+            productCplusD.Add(productD);
+
+            List<IProduct> productDEF = new();
+            productDEF.Add(productD);
+            productDEF.Add(productE);
+            productDEF.Add(productF);
 
             engine.AddProduct(productA);
             engine.AddProduct(productB);
             engine.AddProduct(productC);
             engine.AddProduct(productD);
+            engine.AddProduct(productE);
+            engine.AddProduct(productF);
 
+            engine.AddPromotion(new Promotion() { Cost = 150M, InvolvedProducts = productDEF });
             engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { productA } });
             engine.AddPromotion(new Promotion() { Cost = 45M, NumberOfProducts = 2, InvolvedProducts = new List<IProduct>() { productB } });
-            
-            List<IProduct> productCplusD = new List<IProduct>();
-            productCplusD.Add(productC);
-            productCplusD.Add(productD);
             engine.AddPromotion(new Promotion() { Cost = 30M, InvolvedProducts = productCplusD });
         }
 
@@ -104,5 +114,16 @@ namespace NUnitTestPromotionEngine
             Assert.AreEqual(engine.CalculatePrice(cart), 130);
         }
 
-    }
+        [Test]
+        public void TestDoubleMultiplePromotions()
+        {
+            cart.AddItem("A", 3);
+            cart.AddItem("C", 3);
+            cart.AddItem("D", 4);
+            cart.AddItem("E", 2);
+            cart.AddItem("F", 1);
+
+            Assert.AreEqual(engine.CalculatePrice(cart), 432);
+        }
+}
 }

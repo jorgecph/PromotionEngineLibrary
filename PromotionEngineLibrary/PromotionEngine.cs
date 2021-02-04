@@ -5,8 +5,8 @@ namespace PromotionEngineLibrary
 {
     internal class PromotionEngine
     {
-        private List<IPromotion> promotions;
-        private List<IProduct> products;
+        private readonly List<IPromotion> promotions;
+        private readonly List<IProduct> products;
 
         public PromotionEngine(List<IPromotion> existingPromotions, List<IProduct> existingproducts)
         {
@@ -21,7 +21,7 @@ namespace PromotionEngineLibrary
 
             foreach (var promotion in promotions)
             {
-                if (promotion.InvolvedProducts.Except(products).Count() == 0 && promotion.InvolvedProducts.Count() == 1)
+                if (promotion.InvolvedProducts.Count() == 1 && promotion.InvolvedProducts.Except(products).Count() == 0)
                 {
                     while (missingItems >= promotion.NumberOfProducts)
                     {
@@ -63,6 +63,7 @@ namespace PromotionEngineLibrary
                     }
 
                     Utilities.ReplaceItems(items, involvedItems);
+                    involvedItems.Clear();
                 }
             });
 
@@ -81,7 +82,10 @@ namespace PromotionEngineLibrary
                     continue;
                 }
 
-                output += CalculateSimplePromotions(new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) }, item.Quantity, out missingItems) +
+                output += CalculateSimplePromotions(
+                        new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) },
+                        item.Quantity,
+                        out missingItems) +
                     products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
             }
 
