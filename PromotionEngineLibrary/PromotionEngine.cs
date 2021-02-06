@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PromotionEngineLibrary
@@ -82,11 +83,19 @@ namespace PromotionEngineLibrary
                     continue;
                 }
 
-                output += CalculateSimplePromotions(
+                try
+                {
+                    output += CalculateSimplePromotions(
                         new List<IProduct> { products.Find(product => Equals(product.Sku, item.Sku)) },
                         item.Quantity,
                         out missingItems) +
                     products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
+
+                }
+                catch (NullReferenceException e)
+                {
+                    throw new Exception($"Item {item.Sku} with {item.Quantity} items could not be processed.");
+                }            
             }
 
             return output;

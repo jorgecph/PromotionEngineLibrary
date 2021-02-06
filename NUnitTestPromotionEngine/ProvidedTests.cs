@@ -12,37 +12,41 @@ namespace NUnitTestPromotionEngine
         [OneTimeSetUp]
         public void Init()
         {
-            cart = new Cart();
-            engine = new Engine();
+            cart = Factory.GetNewCart();
+            engine = Factory.GetNewEngine();
 
-            var productA = new Product("A", 50);
-            var productB = new Product("B", 30);
-            var productC = new Product("C", 20);
-            var productD = new Product("D", 15);
-            var productE = new Product("E", 62);
-            var productF = new Product("F", 55);
-
-            List<IProduct> productCplusD = new List<IProduct>();
-            productCplusD.Add(productC);
-            productCplusD.Add(productD);
-
-            List<IProduct> productDEF = new();
-            productDEF.Add(productD);
-            productDEF.Add(productE);
-            productDEF.Add(productF);
-
-            engine.AddProduct(productA);
-            engine.AddProduct(productB);
-            engine.AddProduct(productC);
-            engine.AddProduct(productD);
-            engine.AddProduct(productE);
-            engine.AddProduct(productF);
-
-            engine.AddPromotion(new Promotion() { Cost = 150M, InvolvedProducts = productDEF });
-            engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { productA } });
-            engine.AddPromotion(new Promotion() { Cost = 45M, NumberOfProducts = 2, InvolvedProducts = new List<IProduct>() { productB } });
-            engine.AddPromotion(new Promotion() { Cost = 30M, InvolvedProducts = productCplusD });
+            PopulateProducts();
+            AddPromotions();
         }
+
+        private void PopulateProducts()
+        {
+            engine.AddProduct(Factory.GetNewProduct("A", 50));
+            engine.AddProduct(Factory.GetNewProduct("B", 30));
+            engine.AddProduct(Factory.GetNewProduct("C", 20));
+            engine.AddProduct(Factory.GetNewProduct("D", 15));
+            engine.AddProduct(Factory.GetNewProduct("E", 62));
+            engine.AddProduct(Factory.GetNewProduct("F", 55));
+        }
+
+        private void AddPromotions()
+        {
+            var productCandD = new List<IProduct>();
+            var productDEF = new List<IProduct>();
+
+            productCandD.Add(engine.GetProduct("C"));
+            productCandD.Add(engine.GetProduct("D"));
+
+            productDEF.Add(engine.GetProduct("D"));
+            productDEF.Add(engine.GetProduct("E"));
+            productDEF.Add(engine.GetProduct("F"));
+
+            engine.AddPromotion(150M, productDEF);
+            engine.AddPromotion(130M, 3, new List<IProduct>() { engine.GetProduct("A") });
+            engine.AddPromotion(45M, 2, new List<IProduct>() { engine.GetProduct("B") });
+            engine.AddPromotion(30M, productCandD);
+        }
+
 
         [SetUp]
         public void Setup()
@@ -53,7 +57,6 @@ namespace NUnitTestPromotionEngine
         [Test]
         public void TestScenarioA()
         {
-            cart.ClearItems();
             cart.AddItem("A", 1);
             Assert.AreEqual(engine.CalculatePrice(cart), 50);
 

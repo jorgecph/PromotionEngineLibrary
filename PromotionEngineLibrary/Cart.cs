@@ -11,6 +11,11 @@ namespace PromotionEngineLibrary
             Contents.Add(new ItemCart(sku, quantity));
         }
 
+        public void AddItem(ItemCart item)
+        {
+            Contents.Add(item);
+        }
+
         public void ClearItems()
         {
             Contents.Clear();

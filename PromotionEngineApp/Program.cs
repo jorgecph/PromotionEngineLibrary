@@ -6,48 +6,77 @@ namespace PromotionEngineApp
 {
     class Program
     {
+        private static string desiredQuantityQuestion = "Please type the desired quantity: ";
+
         static void Main(string[] args)
         {
-            Engine engine = new Engine();
-            Cart cart = new Cart();
+            var engine = Factory.GetNewEngine();
+            var cart = Factory.GetNewCart();
 
-            Product productA = new Product("A", 50);
-            Product productB = new Product("B", 30);
-            Product productC = new Product("C", 25);
-            Product productD = new Product("D", 65);
-            Product productE = new Product("E", 62);
-            Product productF = new Product("F", 55);
+            PopulateProducts(engine);
+            AddPromotions(engine);
 
-            List<IProduct> productCandD = new();
-            productCandD.Add(productC);
-            productCandD.Add(productD);
+            ReadInputCartEntry(cart);
 
-            List<IProduct> productDEF = new();
-            productDEF.Add(productD);
-            productDEF.Add(productE);
-            productDEF.Add(productF);
-
-
-            engine.AddPromotion(new Promotion() { Cost = 130M, NumberOfProducts = 3, InvolvedProducts = new List<IProduct>() { productA } });
-            engine.AddPromotion(new Promotion() { Cost = 100M, NumberOfProducts = 2, InvolvedProducts = new List<IProduct>() { productF } });
-            engine.AddPromotion(new Promotion() { Cost = 80M, InvolvedProducts = productCandD });
-            engine.AddPromotion(new Promotion() { Cost = 150M, InvolvedProducts = productDEF });
-
-            engine.AddProduct(productA);
-            engine.AddProduct(productB);
-            engine.AddProduct(productC);
-            engine.AddProduct(productD);
-            engine.AddProduct(productE);
-            engine.AddProduct(productF);
-            
-            cart.AddItem("A", 3);
-            cart.AddItem("C", 3);
-            cart.AddItem("D", 4);
-            cart.AddItem("E", 1);
-            cart.AddItem("F", 1);
-
-            Console.WriteLine($"{engine.CalculatePrice(cart)}");
+            Console.WriteLine();
+            Console.WriteLine($"Your total price is {engine.CalculatePrice(cart)}M");
             Console.WriteLine(  );
+        }
+
+        private static void ReadInputCartEntry(Cart cart)
+        {
+            string eneteredMoreItems = String.Empty;
+            do
+            {
+                Console.Write("Please type the Sku of the product: ");
+                string sku = Console.ReadLine();
+
+                Console.Write(desiredQuantityQuestion);
+                string quantityString = Console.ReadLine();
+
+                int quantity;
+                while (Int32.TryParse(quantityString, out quantity) == false)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Invalid number enetered.");
+                    Console.Write(desiredQuantityQuestion);
+                    quantityString = Console.ReadLine();
+                }
+
+                cart.AddItem(sku, quantity);
+
+                Console.Write("Do you want to add another item (yes/no)?");
+                eneteredMoreItems = Console.ReadLine();
+
+            } while (eneteredMoreItems.Length > 0 && eneteredMoreItems.ToLower()[0].Equals('y'));
+        }
+
+        private static void PopulateProducts(Engine engine)
+        {
+            engine.AddProduct(Factory.GetNewProduct("A", 50));
+            engine.AddProduct(Factory.GetNewProduct("B", 30));
+            engine.AddProduct(Factory.GetNewProduct("C", 25));
+            engine.AddProduct(Factory.GetNewProduct("D", 65));
+            engine.AddProduct(Factory.GetNewProduct("E", 62));
+            engine.AddProduct(Factory.GetNewProduct("F", 55));                        
+        }
+
+        private static void AddPromotions(Engine engine)
+        {
+            var productCandD = new List<IProduct>();
+            var productDEF = new List<IProduct>();
+
+            productCandD.Add(engine.GetProduct("C"));
+            productCandD.Add(engine.GetProduct("D"));
+
+            productDEF.Add(engine.GetProduct("D"));
+            productDEF.Add(engine.GetProduct("E"));
+            productDEF.Add(engine.GetProduct("F"));
+
+            engine.AddPromotion(130M, 3, new List<IProduct>() { engine.GetProduct("A") } );
+            engine.AddPromotion(100M, 2, new List<IProduct>() { engine.GetProduct("F") } );
+            engine.AddPromotion(80M, productCandD );
+            engine.AddPromotion(150M, productDEF );
         }
     }
 }
