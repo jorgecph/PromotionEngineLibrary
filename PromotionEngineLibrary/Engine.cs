@@ -22,6 +22,11 @@ namespace PromotionEngineLibrary
             AddPromotion(new Promotion() { Cost = cost, NumberOfProducts = numberOfProducts, InvolvedProducts = involvedProducts });
         }
 
+        public void AddPromotion(int discount, int numberOfProducts, List<IProduct> involvedProducts)
+        {
+            AddPromotion(new Promotion() { Discount = discount, NumberOfProducts = numberOfProducts, InvolvedProducts = involvedProducts });
+        }
+
         public void AddPromotion(decimal cost, List<IProduct> involvedProducts)
         {
             AddPromotion(new Promotion () { Cost = cost, InvolvedProducts = involvedProducts });
@@ -39,9 +44,10 @@ namespace PromotionEngineLibrary
 
         public decimal CalculatePrice(Cart cart)
         {
+            Cart internalCart = cart.Copy();
             PromotionEngine promotionEngine = new PromotionEngine(Promotions, Products);
 
-            return promotionEngine.GetPriceBasedOnPromotions(cart.Contents);
+            return promotionEngine.GetPriceBasedOnPromotions(internalCart.Contents);
         }
     }
 }

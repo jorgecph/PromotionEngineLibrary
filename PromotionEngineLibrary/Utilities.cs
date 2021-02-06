@@ -8,27 +8,20 @@ namespace PromotionEngineLibrary
 {
     internal static class Utilities
     {
-        public static List<ItemCart> ReplaceItems(List<ItemCart> cartItems, List<ItemCart> newItems)
+        public static void UpdateQuantities(Dictionary<string, int> cartItems, Dictionary<string, int> newItems)
         {
             foreach (var newItem in newItems)
             {
-                cartItems.Remove(cartItems.Find(i => Equals(i.Sku, newItem.Sku)));
-                cartItems.Add(newItem);
+                cartItems[newItem.Key] = newItem.Value;
             }
-
-            return cartItems;
         }
 
-        public static List<ItemCart> DecrementQuantity(List<ItemCart> items)
+        public static void DecrementQuantity(Dictionary<string, int> items, int decrementBy)
         {
-            var output = new List<ItemCart>();
-
             foreach (var item in items)
             {
-                output.Add(new ItemCart { Sku = item.Sku, Quantity = item.Quantity - 1 });
+                items[item.Key] -= decrementBy;
             }
-
-            return output;
         }
     }
 }

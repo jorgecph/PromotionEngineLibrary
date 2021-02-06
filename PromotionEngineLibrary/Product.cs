@@ -4,7 +4,7 @@ namespace PromotionEngineLibrary
 {
     public class Product : IProduct, IEquatable<Product>
     {
-        public string Sku { get; init; }
+        public string Sku { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
 
