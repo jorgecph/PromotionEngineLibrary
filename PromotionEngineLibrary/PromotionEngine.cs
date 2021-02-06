@@ -92,7 +92,7 @@ namespace PromotionEngineLibrary
                     products.Find(product => Equals(product.Sku, item.Sku)).Price * missingItems;
 
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     throw new Exception($"Item {item.Sku} with {item.Quantity} items could not be processed.");
                 }            

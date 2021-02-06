@@ -19,7 +19,7 @@ namespace PromotionEngineApp
             ReadInputCartEntry(cart);
 
             Console.WriteLine();
-            Console.WriteLine($"Your total price is {engine.CalculatePrice(cart)}M");
+            Console.WriteLine($"Your total price is {engine.CalculatePrice(cart).ToString("C")}");
             Console.WriteLine(  );
         }
 
