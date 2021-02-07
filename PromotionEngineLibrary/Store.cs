@@ -11,6 +11,38 @@ namespace PromotionEngineLibrary
         public List<IProduct> Products { get; private set; } = new List<IProduct>();
         public List<IPromotion> Promotions { get; private set; } = new List<IPromotion>();
 
+        private List<IPromotion> singleProductPromotions;
+        private List<IPromotion> multipleProductPromotions;
+
+
+        public List<IPromotion> SingleProductPromotions
+        {
+            get 
+            { 
+                if (singleProductPromotions == null)
+                {
+                    singleProductPromotions = new List<IPromotion>();
+                    singleProductPromotions.AddRange(Promotions.FindAll(p => p.InvolvedProducts.Count() == 1));
+                }
+
+                return singleProductPromotions;
+            }
+        }
+
+        public List<IPromotion> MultipleProductPromotions
+        {
+            get
+            {
+                if (multipleProductPromotions == null)
+                {
+                    multipleProductPromotions = new List<IPromotion>();
+                    multipleProductPromotions.AddRange(Promotions.FindAll(p => p.InvolvedProducts.Count() > 1));
+                }
+
+                return multipleProductPromotions;
+            }
+        }
+
         public void AddProduct(IProduct product)
         {
             Products.Add(product);
@@ -19,6 +51,8 @@ namespace PromotionEngineLibrary
         public void AddPromotion(IPromotion promotion)
         {
             Promotions.Add(promotion);
+            singleProductPromotions = null;
+            multipleProductPromotions = null;
         }
 
         public void AddPromotion(decimal cost, int numberOfProducts, List<IProduct> involvedProducts)

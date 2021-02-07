@@ -14,7 +14,7 @@ namespace PromotionEngineLibrary
 
         public void AddItem(ItemCart item)
         {
-            Contents.Add(item.Sku, item.Quantity);
+            AddItem(item.Sku, item.Quantity);
         }
 
         public void ClearItems()

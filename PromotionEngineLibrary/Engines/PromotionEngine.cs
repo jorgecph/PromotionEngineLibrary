@@ -16,67 +16,58 @@ namespace PromotionEngineLibrary
             return GetPriceBasedOnPromotions(internalCart.Contents);
         }
 
-        private decimal CalculateSimplePromotions(IProduct product, int quantity, out int missingItems)
+        private decimal CalculateSingleProductPromotions(IProduct product, int quantity)
         {
             decimal output = 0;
-            missingItems = quantity;
 
-            foreach (var promotion in store.Promotions)
+            foreach (var promotion in store.SingleProductPromotions.FindAll(p => p.InvolvedProducts[0].Sku.Equals(product.Sku)))
             {
-                if (promotion.InvolvedProducts.Count() != 1 || !promotion.InvolvedProducts[0].Sku.Equals(product.Sku))
+                int numberOfGroups = quantity / promotion.NumberOfProducts;
+                if (promotion.Discount > 0)
                 {
-                    continue;
+                    output += numberOfGroups * product.Price * promotion.NumberOfProducts * ((100 - promotion.Discount) / 100);
+                }
+                else
+                {
+                    output += numberOfGroups * promotion.Cost;
                 }
 
-                // TODO: Remove the while, and introduce the mathematical function below
-                while (missingItems >= promotion.NumberOfProducts)
-                {
-                    missingItems -= promotion.NumberOfProducts;
-                    if (promotion.Discount > 0)
-                    {
-                        output += product.Price * promotion.NumberOfProducts * ((100 - promotion.Discount) / 100);
-                    }
-                    else
-                    {
-                        output += promotion.Cost;
-                    }
-                }
+                quantity -= promotion.NumberOfProducts * numberOfGroups;
             }
+
+            output += product.Price * quantity;
 
             return output;
         }
 
-        private decimal ApplyMultipleProductPromotions(Dictionary<string, int> items)
+        private decimal CalculateMultipleProductPromotions(Dictionary<string, int> items)
         {
             Dictionary<string, int> involvedItems = new Dictionary<string, int>();
             decimal output = 0;
 
-            store.Promotions.ForEach(delegate (IPromotion promotion)
+            foreach (var promotion in store.MultipleProductPromotions)
             {
-                if (promotion.InvolvedProducts.Count() > 1)
+                promotion.InvolvedProducts.ForEach(delegate (IProduct involvedProduct)
                 {
-                    promotion.InvolvedProducts.ForEach(delegate (IProduct involvedProduct)
+                    if (items.TryGetValue(involvedProduct.Sku, out int quantity) && quantity > 0)
                     {
-                        if (items.TryGetValue(involvedProduct.Sku, out int quantity) && quantity > 0)
-                        {
-                            involvedItems.Add(involvedProduct.Sku, quantity);
-                        }
-                    });
+                        involvedItems.Add(involvedProduct.Sku, quantity);
+                    }
+                });
 
-                    if (promotion.InvolvedProducts.Count == involvedItems.Count)
+                if (promotion.InvolvedProducts.Count == involvedItems.Count)
+                {
+                    while (involvedItems.ContainsValue(0) == false)
                     {
-                        while (involvedItems.ContainsValue(0) == false)
-                        {
-                            Utilities.DecrementQuantity(involvedItems, 1);
-                            output += promotion.Cost;
-                        }
-
-                        Utilities.UpdateQuantities(items, involvedItems);
+                        Utilities.DecrementQuantity(involvedItems, 1);
+                        output += promotion.Cost;
                     }
 
-                    involvedItems.Clear();
+                    Utilities.UpdateQuantities(items, involvedItems);
                 }
-            });
+
+                involvedItems.Clear();
+            }
 
             return output;
         }
@@ -84,23 +75,14 @@ namespace PromotionEngineLibrary
         private decimal ApplySingleProductPromotions(Dictionary<string, int> items)
         {
             decimal output = 0M;
-            int missingItems;
 
-            foreach (var item in items)
+            foreach (var item in items.Where(i => i.Value != 0))
             {
-                if (item.Value == 0)
-                {
-                    continue;
-                }
-
                 try
                 {
-                    output += CalculateSimplePromotions(
+                    output += CalculateSingleProductPromotions(
                         store.Products.Find(product => Equals(product.Sku, item.Key)),
-                        item.Value,
-                        out missingItems) +
-                    store.Products.Find(product => Equals(product.Sku, item.Key)).Price * missingItems;
-
+                        item.Value);
                 }
                 catch (NullReferenceException)
                 {
@@ -114,7 +96,7 @@ namespace PromotionEngineLibrary
         public decimal GetPriceBasedOnPromotions(Dictionary<string, int> items)
         {
             decimal output = 0M;
-            output += items.Count > 1 ? ApplyMultipleProductPromotions(items) : 0M;
+            output += items.Count > 1 ? CalculateMultipleProductPromotions(items) : 0M;
             output += ApplySingleProductPromotions(items);
             return output;
         }

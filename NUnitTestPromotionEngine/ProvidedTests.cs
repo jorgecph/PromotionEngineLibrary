@@ -211,6 +211,7 @@ namespace NUnitTestPromotionEngine
             Assert.AreEqual((87 * 9 * 0.99 + 87 * 2), cart.CalculatePrice(store));
 
             cart.AddItem("A", 5);
+
             Assert.AreEqual((87 * 9 * 0.99 + 87 * 2) + (130 + 2 * 50), cart.CalculatePrice(store));
         }
 
@@ -245,6 +246,5 @@ namespace NUnitTestPromotionEngine
 
             Assert.AreEqual(6951.19, cart.CalculatePrice(store));
         }
-
     }
 }
