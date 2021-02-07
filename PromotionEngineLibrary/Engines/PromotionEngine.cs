@@ -4,15 +4,16 @@ using System.Linq;
 
 namespace PromotionEngineLibrary
 {
-    internal class PromotionEngine
+    public class PromotionEngine : Engine
     {
-        private readonly List<IPromotion> promotions;
-        private readonly List<IProduct> products;
+        private Store store;
 
-        public PromotionEngine(List<IPromotion> existingPromotions, List<IProduct> existingproducts)
+        public override decimal CalculatePrice(Cart cart, Store store)
         {
-            promotions = existingPromotions;
-            products = existingproducts;
+            Cart internalCart = cart.Copy();
+
+            this.store = store;
+            return GetPriceBasedOnPromotions(internalCart.Contents);
         }
 
         private decimal CalculateSimplePromotions(IProduct product, int quantity, out int missingItems)
@@ -20,7 +21,7 @@ namespace PromotionEngineLibrary
             decimal output = 0;
             missingItems = quantity;
 
-            foreach (var promotion in promotions)
+            foreach (var promotion in store.Promotions)
             {
                 if (promotion.InvolvedProducts.Count() != 1 || !promotion.InvolvedProducts[0].Sku.Equals(product.Sku))
                 {
@@ -50,7 +51,7 @@ namespace PromotionEngineLibrary
             Dictionary<string, int> involvedItems = new Dictionary<string, int>();
             decimal output = 0;
 
-            promotions.ForEach(delegate (IPromotion promotion)
+            store.Promotions.ForEach(delegate (IPromotion promotion)
             {
                 if (promotion.InvolvedProducts.Count() > 1)
                 {
@@ -95,10 +96,10 @@ namespace PromotionEngineLibrary
                 try
                 {
                     output += CalculateSimplePromotions(
-                        products.Find(product => Equals(product.Sku, item.Key)),
+                        store.Products.Find(product => Equals(product.Sku, item.Key)),
                         item.Value,
                         out missingItems) +
-                    products.Find(product => Equals(product.Sku, item.Key)).Price * missingItems;
+                    store.Products.Find(product => Equals(product.Sku, item.Key)).Price * missingItems;
 
                 }
                 catch (NullReferenceException)

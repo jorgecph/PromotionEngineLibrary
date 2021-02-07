@@ -10,16 +10,17 @@ namespace PromotionEngineApp
 
         static void Main(string[] args)
         {
-            var engine = Factory.GetNewEngine();
-            var cart = Factory.GetNewCart();
+            var cart = Factory.CreateCart();
+            var store = Factory.CreateStore();
 
-            PopulateProducts(engine);
-            AddPromotions(engine);
+            PopulateProducts(store);
+            AddPromotions(store);
 
             ReadInputCartEntry(cart);
 
+            cart.SetPromotionStrategy(Factory.CreatePromotionEngine());
             Console.WriteLine();
-            Console.WriteLine($"Your total price is {engine.CalculatePrice(cart).ToString("C")}");
+            Console.WriteLine($"Your total price is {cart.CalculatePrice(store).ToString("C")}");
             Console.WriteLine(  );
         }
 
@@ -51,32 +52,32 @@ namespace PromotionEngineApp
             } while (eneteredMoreItems.Length > 0 && eneteredMoreItems.ToLower()[0].Equals('y'));
         }
 
-        private static void PopulateProducts(Engine engine)
+        private static void PopulateProducts(Store store)
         {
-            engine.AddProduct(Factory.GetNewProduct("A", 50));
-            engine.AddProduct(Factory.GetNewProduct("B", 30));
-            engine.AddProduct(Factory.GetNewProduct("C", 25));
-            engine.AddProduct(Factory.GetNewProduct("D", 65));
-            engine.AddProduct(Factory.GetNewProduct("E", 62));
-            engine.AddProduct(Factory.GetNewProduct("F", 55));                        
+            store.AddProduct(Factory.CreateNewProduct("A", 50));
+            store.AddProduct(Factory.CreateNewProduct("B", 30));
+            store.AddProduct(Factory.CreateNewProduct("C", 25));
+            store.AddProduct(Factory.CreateNewProduct("D", 65));
+            store.AddProduct(Factory.CreateNewProduct("E", 62));
+            store.AddProduct(Factory.CreateNewProduct("F", 55));                        
         }
 
-        private static void AddPromotions(Engine engine)
+        private static void AddPromotions(Store store)
         {
             var productCandD = new List<IProduct>();
             var productDEF = new List<IProduct>();
 
-            productCandD.Add(engine.GetProduct("C"));
-            productCandD.Add(engine.GetProduct("D"));
+            productCandD.Add(store.GetProduct("C"));
+            productCandD.Add(store.GetProduct("D"));
 
-            productDEF.Add(engine.GetProduct("D"));
-            productDEF.Add(engine.GetProduct("E"));
-            productDEF.Add(engine.GetProduct("F"));
+            productDEF.Add(store.GetProduct("D"));
+            productDEF.Add(store.GetProduct("E"));
+            productDEF.Add(store.GetProduct("F"));
 
-            engine.AddPromotion(130M, 3, new List<IProduct>() { engine.GetProduct("A") } );
-            engine.AddPromotion(100M, 2, new List<IProduct>() { engine.GetProduct("F") } );
-            engine.AddPromotion(80M, productCandD );
-            engine.AddPromotion(150M, productDEF );
+            store.AddPromotion(130M, 3, new List<IProduct>() { store.GetProduct("A") } );
+            store.AddPromotion(100M, 2, new List<IProduct>() { store.GetProduct("F") } );
+            store.AddPromotion(80M, productCandD );
+            store.AddPromotion(150M, productDEF );
         }
     }
 }

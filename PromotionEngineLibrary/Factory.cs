@@ -8,17 +8,22 @@ namespace PromotionEngineLibrary
 {
     public static class Factory
     {
-        public static Engine GetNewEngine()
+        public static PromotionEngine CreatePromotionEngine()
         {
-            return new Engine();
+            return new PromotionEngine();
         }
 
-        public static Cart GetNewCart()
+        public static Store CreateStore()
+        {
+            return new Store();
+        }
+
+        public static Cart CreateCart()
         {
             return new Cart();
         }
 
-        public static IProduct GetNewProduct(string sku, decimal price)
+        public static IProduct CreateNewProduct(string sku, decimal price)
         {
             return new Product(sku, price);
         }

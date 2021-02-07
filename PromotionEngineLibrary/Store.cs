@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PromotionEngineLibrary
 {
-    public class Engine
+    public class Store
     {
         public List<IProduct> Products { get; private set; } = new List<IProduct>();
         public List<IPromotion> Promotions { get; private set; } = new List<IPromotion>();
@@ -29,7 +33,7 @@ namespace PromotionEngineLibrary
 
         public void AddPromotion(decimal cost, List<IProduct> involvedProducts)
         {
-            AddPromotion(new Promotion () { Cost = cost, InvolvedProducts = involvedProducts });
+            AddPromotion(new Promotion() { Cost = cost, InvolvedProducts = involvedProducts });
         }
 
         public bool RemovePromotion(IPromotion promotion)
@@ -40,14 +44,6 @@ namespace PromotionEngineLibrary
         public IProduct GetProduct(string sku)
         {
             return Products.Find(p => p.Sku.Equals(sku));
-        }
-
-        public decimal CalculatePrice(Cart cart)
-        {
-            Cart internalCart = cart.Copy();
-            PromotionEngine promotionEngine = new PromotionEngine(Promotions, Products);
-
-            return promotionEngine.GetPriceBasedOnPromotions(internalCart.Contents);
         }
     }
 }
