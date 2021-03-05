@@ -42,8 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cart\Cart.cs" />
+    <Compile Include="Cart\ICart.cs" />
+    <Compile Include="DiscountPromotion.cs" />
     <Compile Include="Engines\Engine.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="MultipleItemDiscountPromotion.cs" />
+    <Compile Include="SingleProductDiscountPromotion.cs" />
+    <Compile Include="Store\IStore.cs" />
     <Compile Include="Product\IProduct.cs" />
     <Compile Include="Promotion\IPromotion.cs" />
     <Compile Include="Cart\ItemCart.cs" />
@@ -51,7 +56,7 @@
     <Compile Include="Promotion\Promotion.cs" />
     <Compile Include="Engines\PromotionEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Store.cs" />
+    <Compile Include="Store\Store.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -5,6 +5,6 @@ namespace PromotionEngineLibrary
 {
     public abstract class Engine
     {
-        public abstract decimal CalculatePrice(Cart cart, Store store);
+        public abstract decimal CalculatePrice(ICart cart, IStore store);
     }
 }

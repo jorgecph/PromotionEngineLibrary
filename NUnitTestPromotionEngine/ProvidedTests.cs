@@ -1,13 +1,14 @@
 using NUnit.Framework;
 using PromotionEngineLibrary;
+using System;
 using System.Collections.Generic;
 
 namespace NUnitTestPromotionEngine
 {
     public class Tests
     {
-        private Cart cart;
-        private Store store;
+        private ICart cart;
+        private IStore store;
 
         [OneTimeSetUp]
         public void Init()
@@ -17,41 +18,48 @@ namespace NUnitTestPromotionEngine
 
             PopulateProducts();
             AddPromotions();
+            AddDiscountPromotions();
             cart.SetPromotionStrategy(Factory.CreatePromotionEngine());
+        }
+
+        private void AddDiscountPromotions()
+        {
+            store.DiscountPromotions.Add(new MultipleItemDiscountPromotion(store));
+            store.DiscountPromotions.Add(new SingleProductDiscountPromotion(store));
         }
 
         private void PopulateProducts()
         {
-            store.AddProduct(Factory.CreateNewProduct("A", 50));
-            store.AddProduct(Factory.CreateNewProduct("B", 30));
-            store.AddProduct(Factory.CreateNewProduct("C", 20));
-            store.AddProduct(Factory.CreateNewProduct("D", 15));
-            store.AddProduct(Factory.CreateNewProduct("E", 62));
-            store.AddProduct(Factory.CreateNewProduct("F", 55));
+            store.AddProduct(Factory.CreateProduct("A", 50));
+            store.AddProduct(Factory.CreateProduct("B", 30));
+            store.AddProduct(Factory.CreateProduct("C", 20));
+            store.AddProduct(Factory.CreateProduct("D", 15));
+            store.AddProduct(Factory.CreateProduct("E", 62));
+            store.AddProduct(Factory.CreateProduct("F", 55));
         }
 
         private void PopulateMoreProducts()
         {
-            store.AddProduct(Factory.CreateNewProduct("G", 70));
-            store.AddProduct(Factory.CreateNewProduct("H", 71));
-            store.AddProduct(Factory.CreateNewProduct("I", 72));
-            store.AddProduct(Factory.CreateNewProduct("J", 73));
-            store.AddProduct(Factory.CreateNewProduct("K", 75));
-            store.AddProduct(Factory.CreateNewProduct("L", 76));
-            store.AddProduct(Factory.CreateNewProduct("M", 77));
-            store.AddProduct(Factory.CreateNewProduct("N", 78));
-            store.AddProduct(Factory.CreateNewProduct("O", 79));
-            store.AddProduct(Factory.CreateNewProduct("P", 80));
-            store.AddProduct(Factory.CreateNewProduct("Q", 81));
-            store.AddProduct(Factory.CreateNewProduct("R", 82));
-            store.AddProduct(Factory.CreateNewProduct("S", 83));
-            store.AddProduct(Factory.CreateNewProduct("T", 84));
-            store.AddProduct(Factory.CreateNewProduct("U", 85));
-            store.AddProduct(Factory.CreateNewProduct("V", 86));
-            store.AddProduct(Factory.CreateNewProduct("W", 87));
-            store.AddProduct(Factory.CreateNewProduct("X", 88));
-            store.AddProduct(Factory.CreateNewProduct("Y", 89));
-            store.AddProduct(Factory.CreateNewProduct("Z", 90));
+            store.AddProduct(Factory.CreateProduct("G", 70));
+            store.AddProduct(Factory.CreateProduct("H", 71));
+            store.AddProduct(Factory.CreateProduct("I", 72));
+            store.AddProduct(Factory.CreateProduct("J", 73));
+            store.AddProduct(Factory.CreateProduct("K", 75));
+            store.AddProduct(Factory.CreateProduct("L", 76));
+            store.AddProduct(Factory.CreateProduct("M", 77));
+            store.AddProduct(Factory.CreateProduct("N", 78));
+            store.AddProduct(Factory.CreateProduct("O", 79));
+            store.AddProduct(Factory.CreateProduct("P", 80));
+            store.AddProduct(Factory.CreateProduct("Q", 81));
+            store.AddProduct(Factory.CreateProduct("R", 82));
+            store.AddProduct(Factory.CreateProduct("S", 83));
+            store.AddProduct(Factory.CreateProduct("T", 84));
+            store.AddProduct(Factory.CreateProduct("U", 85));
+            store.AddProduct(Factory.CreateProduct("V", 86));
+            store.AddProduct(Factory.CreateProduct("W", 87));
+            store.AddProduct(Factory.CreateProduct("X", 88));
+            store.AddProduct(Factory.CreateProduct("Y", 89));
+            store.AddProduct(Factory.CreateProduct("Z", 90));
         }
 
         private void AddPromotions()

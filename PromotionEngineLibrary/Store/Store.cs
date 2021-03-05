@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace PromotionEngineLibrary
 {
-    public class Store
+    public class Store : IStore
     {
         public List<IProduct> Products { get; private set; } = new List<IProduct>();
-        public List<IPromotion> Promotions { get; private set; } = new List<IPromotion>();
+        public List<DiscountPromotion> DiscountPromotions { get; private set; } = new List<DiscountPromotion>();
 
+        private List<IPromotion> promotions = new List<IPromotion>();
         private List<IPromotion> singleProductPromotions;
         private List<IPromotion> multipleProductPromotions;
 
-
         public List<IPromotion> SingleProductPromotions
         {
-            get 
-            { 
+            get
+            {
                 if (singleProductPromotions == null)
                 {
                     singleProductPromotions = new List<IPromotion>();
-                    singleProductPromotions.AddRange(Promotions.FindAll(p => p.InvolvedProducts.Count() == 1));
+                    singleProductPromotions.AddRange(promotions.FindAll(p => p.InvolvedProducts.Count() == 1));
                 }
 
                 return singleProductPromotions;
@@ -36,7 +36,7 @@ namespace PromotionEngineLibrary
                 if (multipleProductPromotions == null)
                 {
                     multipleProductPromotions = new List<IPromotion>();
-                    multipleProductPromotions.AddRange(Promotions.FindAll(p => p.InvolvedProducts.Count() > 1));
+                    multipleProductPromotions.AddRange(promotions.FindAll(p => p.InvolvedProducts.Count() > 1));
                 }
 
                 return multipleProductPromotions;
@@ -48,11 +48,16 @@ namespace PromotionEngineLibrary
             Products.Add(product);
         }
 
-        public void AddPromotion(IPromotion promotion)
+        private void StatePromotionsHaveChanged()
         {
-            Promotions.Add(promotion);
             singleProductPromotions = null;
             multipleProductPromotions = null;
+        }
+
+        public void AddPromotion(IPromotion promotion)
+        {
+            promotions.Add(promotion);
+            StatePromotionsHaveChanged();
         }
 
         public void AddPromotion(decimal cost, int numberOfProducts, List<IProduct> involvedProducts)
@@ -72,7 +77,8 @@ namespace PromotionEngineLibrary
 
         public bool RemovePromotion(IPromotion promotion)
         {
-            return Promotions.Remove(promotion);
+            StatePromotionsHaveChanged();
+            return promotions.Remove(promotion);
         }
 
         public IProduct GetProduct(string sku)

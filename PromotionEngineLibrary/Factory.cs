@@ -18,14 +18,19 @@ namespace PromotionEngineLibrary
             return new Store();
         }
 
-        public static Cart CreateCart()
+        public static ICart CreateCart()
         {
             return new Cart();
         }
 
-        public static IProduct CreateNewProduct(string sku, decimal price)
+        public static IProduct CreateProduct(string sku, decimal price)
         {
             return new Product(sku, price);
+        }
+
+        public static IPromotion CreatePromotion()
+        {
+            return new Promotion();
         }
     }
 }

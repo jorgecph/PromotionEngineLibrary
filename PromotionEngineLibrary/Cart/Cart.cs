@@ -2,7 +2,7 @@
 
 namespace PromotionEngineLibrary
 {
-    public class Cart
+    public class Cart : ICart
     {
         public Dictionary<string, int> Contents { get; private set; } = new Dictionary<string, int>();
         private Engine engine;
@@ -22,11 +22,11 @@ namespace PromotionEngineLibrary
             Contents.Clear();
         }
 
-        public Cart Copy()
+        public ICart Copy()
         {
-            Cart output = new Cart();
+            ICart output = Factory.CreateCart();
 
-            foreach(var content in Contents)
+            foreach (var content in Contents)
             {
                 output.AddItem(content.Key, content.Value);
             }
@@ -38,7 +38,7 @@ namespace PromotionEngineLibrary
             this.engine = engine;
         }
 
-        public decimal CalculatePrice(Store store)
+        public decimal CalculatePrice(IStore store)
         {
             return engine.CalculatePrice(this, store);
         }

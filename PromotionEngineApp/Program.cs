@@ -15,6 +15,7 @@ namespace PromotionEngineApp
 
             PopulateProducts(store);
             AddPromotions(store);
+            AddDiscountPromotions(store);
 
             ReadInputCartEntry(cart);
 
@@ -24,7 +25,7 @@ namespace PromotionEngineApp
             Console.WriteLine(  );
         }
 
-        private static void ReadInputCartEntry(Cart cart)
+        private static void ReadInputCartEntry(ICart cart)
         {
             string eneteredMoreItems = String.Empty;
             do
@@ -54,12 +55,12 @@ namespace PromotionEngineApp
 
         private static void PopulateProducts(Store store)
         {
-            store.AddProduct(Factory.CreateNewProduct("A", 50));
-            store.AddProduct(Factory.CreateNewProduct("B", 30));
-            store.AddProduct(Factory.CreateNewProduct("C", 25));
-            store.AddProduct(Factory.CreateNewProduct("D", 65));
-            store.AddProduct(Factory.CreateNewProduct("E", 62));
-            store.AddProduct(Factory.CreateNewProduct("F", 55));                        
+            store.AddProduct(Factory.CreateProduct("A", 50));
+            store.AddProduct(Factory.CreateProduct("B", 30));
+            store.AddProduct(Factory.CreateProduct("C", 25));
+            store.AddProduct(Factory.CreateProduct("D", 65));
+            store.AddProduct(Factory.CreateProduct("E", 62));
+            store.AddProduct(Factory.CreateProduct("F", 55));                        
         }
 
         private static void AddPromotions(Store store)
@@ -78,6 +79,12 @@ namespace PromotionEngineApp
             store.AddPromotion(100M, 2, new List<IProduct>() { store.GetProduct("F") } );
             store.AddPromotion(80M, productCandD );
             store.AddPromotion(150M, productDEF );
+        }
+
+        private static void AddDiscountPromotions(Store store)
+        {
+            store.DiscountPromotions.Add(new MultipleItemDiscountPromotion(store));
+            store.DiscountPromotions.Add(new SingleProductDiscountPromotion(store));
         }
     }
 }
